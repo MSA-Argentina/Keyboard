@@ -2,12 +2,20 @@
     $.fn.extend({
 
         keyboard: function() {
-            console.log("keyboard");
+            this.addClass("text");
+            this.focusin(function(){
+                $("#keyboard").attr("data-target", $(this).attr("id"));
+            });
         },
+
 
         build_keyboard: function(){
             var container = this;
-            var destiny = jQuery("input.text:first");
+            container.attr("id","keyboard");
+            if(this.attr("data-target") == undefined){
+                var destiny = jQuery("input.text:first").attr("id");
+                this.attr("data-target", destiny);
+            }
             var layouts = {
                 "qwerty": [
                     ['1 2 3 4 5 6 7 8 9 0'],
@@ -60,8 +68,10 @@
                                         .val('Space')
                                         .addClass('ui-keyboard-space')
                                         .click(function(){
+                                            destiny = $("#" + container.attr("data-target"));
                                             destiny.val( 
                                                 destiny.val() + ' ');
+                                            destiny.focus();
                                         })
                                     .appendTo(newSet);
                                     break;
@@ -71,8 +81,10 @@
                                         .val('Borrar')
                                         .addClass('ui-keyboard-bksp')
                                         .click(function(){
+                                            destiny = $("#" + container.attr("data-target"));
                                             destiny.val(
                                                 destiny.val().substring(0,destiny.val().length - 1));
+                                            destiny.focus();
                                         })
                                     .appendTo(newSet);
                                     break;
@@ -89,7 +101,17 @@
                                         .val('Siguiente')
                                         .addClass('ui-keyboard-next')
                                         .click(function(){
-                                            destiny = destiny.next("input.text")
+                                            destiny = $("#" + container.attr("data-target"));
+                                            if(typeof(destiny.next("input.text").attr("id")) == "undefined"){
+                                               $(this).attr('name','key_accept')
+                                                    .attr('value','Aceptar')
+                                                    .removeClass('ui-keyboard-next')
+                                                    .addClass('ui-keyboard-accept');
+                                            } else {
+                                                destiny = destiny.next("input.text");
+                                                container.attr("data-target", destiny.attr("id"));
+                                                destiny.focus();
+                                            }
                                         })
                                     .appendTo(newSet);
                                     break;
@@ -99,7 +121,9 @@
                                 .attr('name','key_'+row+'_'+key)
                                 .val(keys[key])
                                 .click(function(){
-                                    destiny.val(destiny.val() + this.value)
+                                    destiny = $("#" + container.attr("data-target"));
+                                    destiny.val(destiny.val() + this.value);
+                                    destiny.focus();
                                 })
                                 .appendTo(newSet);
                         }
