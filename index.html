@@ -10,7 +10,7 @@
 
 	<!-- keyboard widget css & script (required) -->
 	<link href="css/keyboard.css" rel="stylesheet">
-	<script src="js/jquery.keyboard.js"></script>
+	<script src="js/keyboard.js"></script>
 
 </head>
 
@@ -27,15 +27,12 @@
 
 	<div class="block">
 		<h2><span class="tooltip" title="Click to see code">QWERTY Text</span></h2>
-		<input id="text" class="qwerty" type="text" placeholder="Enter something...">
-		<div class="code ui-corner-all">
-			<pre class="html">&lt;!-- HTML --&gt;
-&lt;input class="qwerty" type="text" placeholder="Enter something..."&gt;</pre>
-<pre class="js">
-$('.qwerty:eq(0)')
- .keyboard({ layout: 'qwerty' })</pre>
-		</div>
-	</div>
+		<input id="text1" class="text" type="text" placeholder="Enter something...">
+		<input id="text2" class="text" type="text" placeholder="Enter something else">
+        <div class="qwerty"></div>
+        <script type="text/javascript">
+            $('.qwerty').build_keyboard();
+        </script>
 
 
 	<div id="showcode"></div>
