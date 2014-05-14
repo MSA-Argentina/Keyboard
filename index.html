@@ -19,11 +19,6 @@
 <div id="page-wrap">
 
 	<h1><a href="https://github.com/Mottie/Keyboard">Virtual Keyboard</a></h1>
-	<h4>Original by 
-		<a href="http://jsatt.blogspot.com/2010/01/on-screen-keyboard-widget-using-jquery.html">Jeremy Satterfield</a>, 
-		updated &amp; maintained by <a href="http://wowmotty.blogspot.com/2010/11/jquery-ui-keyboard-widget.html">Rob Garrison</a>
-	</h4>
-
 
 	<div class="block">
 		<h2><span class="tooltip" title="Click to see code">QWERTY Text</span></h2>
@@ -33,6 +28,10 @@
         <script type="text/javascript">
             $('.qwerty').build_keyboard();
             $('.text').keyboard();
+            $('input[name="key_accept"]').on('click',test);
+            function test(){
+                console.log('acepto');
+            }
         </script>
 
 

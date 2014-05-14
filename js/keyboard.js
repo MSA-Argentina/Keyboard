@@ -1,42 +1,56 @@
 (function($){
-    $.fn.extend({
+        
+        var destiny = jQuery("input.text:first").attr("id");
+        var container = $("#keyboard");
+        //Keyboard layouts
+        var layouts = {
+            "qwerty": [
+                ['1 2 3 4 5 6 7 8 9 0'],
+                ['Q W E R T Y U I O P'],
+                ['A S D F G H J K L Ñ'],
+                ['Z X C V B N M {bksp}' ],
+                ['{space} {next}' ],
+            ],
+            "num": [
+                ['1 2 3'],
+                ['4 5 6'],
+                ['7 8 9'],
+                ['0 {bksp} {accept}']
+            ]
+        };
+        //Button templates
+        var keyBtn = jQuery('<div></div>')
+                .addClass('ui-keyboard-button')
+                .addClass('ui-state-default');
+        var actionKey = keyBtn.clone()
+                .addClass('ui-keyboard-actionkey');
 
-        keyboard: function() {
+        $.fn.keyboard = function() {
+            //Behavior for the inputs
             this.addClass("text");
             this.focusin(function(){
-                $("#keyboard").attr("data-target", $(this).attr("id"));
+                destiny = $(this);
+                container.attr("data-target", destiny.attr("id"));
+                if(typeof(destiny.next("input.text").attr("id")) != "undefined"){
+                    $('div[name="key_accept"]').attr('name','key_next')
+                           .text('Siguiente')
+                           .removeClass('ui-keyboard-accept')
+                           .addClass('ui-keyboard-next');
+                } else {
+                    $('div[name="key_next"]').attr('name','key_accept')
+                           .text('Aceptar')
+                           .removeClass('ui-keyboard-next')
+                           .addClass('ui-keyboard-accept');
+                }
             });
-        },
+        };
 
-
-        build_keyboard: function(){
-            var container = this;
+        $.fn.build_keyboard = function(options){
+            container = this;
             container.attr("id","keyboard");
             if(this.attr("data-target") == undefined){
-                var destiny = jQuery("input.text:first").attr("id");
                 this.attr("data-target", destiny);
             }
-            var layouts = {
-                "qwerty": [
-                    ['1 2 3 4 5 6 7 8 9 0'],
-                    ['Q W E R T Y U I O P'],
-                    ['A S D F G H J K L Ñ'],
-                    ['Z X C V B N M {bksp}' ],
-                    ['{space} {next}' ],
-                ],
-                "num": [
-                    ['1 2 3'],
-                    ['4 5 6'],
-                    ['7 8 9'],
-                    ['0 {bksp} {accept}']
-                ]
-            };
-            var keyBtn = jQuery('<input />')
-                    .attr('type','button')
-                    .addClass('ui-keyboard-button')
-                    .addClass('ui-state-default');
-            var actionKey = keyBtn.clone()
-                    .addClass('ui-keyboard-actionkey');
 
             for( row in layouts['qwerty'] ){
                 currentRow = layouts['qwerty'][row];
@@ -49,12 +63,6 @@
                     newSet = jQuery('<div></div>')
                         .addClass('ui-keyboard-keyset')
                         .appendTo(newRow);
-                    if(set==1){
-                        //Support for modifiers
-                        newSet
-                            .addClass('ui-keyboard-shiftset')
-                            .hide();
-                    }
                     currentSet = currentRow[set];
                     keys = currentSet.split(/\s+/);
                     for( key in keys ){
@@ -64,13 +72,10 @@
                             switch(action){
                                 case "space":
                                     actionKey.clone()
-                                        .attr('name','key_space')
-                                        .val('Space')
+                                        .text('Espacio')
                                         .addClass('ui-keyboard-space')
                                         .click(function(){
-                                            destiny = $("#" + container.attr("data-target"));
-                                            destiny.val( 
-                                                destiny.val() + ' ');
+                                            destiny.val(destiny.val() + ' ');
                                             destiny.focus();
                                         })
                                     .appendTo(newSet);
@@ -78,59 +83,43 @@
                                 case "bksp":
                                     actionKey.clone()
                                         .attr('name','key_bksp')
-                                        .val('Borrar')
+                                        .text('Borrar')
                                         .addClass('ui-keyboard-bksp')
                                         .click(function(){
-                                            destiny = $("#" + container.attr("data-target"));
-                                            destiny.val(
-                                                destiny.val().substring(0,destiny.val().length - 1));
+                                            destiny.val(destiny.val()
+                                                .substring(0,destiny.val().length - 1));
                                             destiny.focus();
                                         })
-                                    .appendTo(newSet);
+                                        .appendTo(newSet);
                                     break;
                                 case "accept":
                                     actionKey.clone()
-                                        .attr('name','key_accept')
-                                        .val('Aceptar')
+                                        .text('Aceptar')
                                         .addClass('ui-keyboard-accept')
-                                    .appendTo(newSet);
+                                        .appendTo(newSet);
                                     break;
                                 case "next":
                                     actionKey.clone()
-                                        .attr('name','key_next')
-                                        .val('Siguiente')
+                                        .text('Siguiente')
                                         .addClass('ui-keyboard-next')
                                         .click(function(){
-                                            destiny = $("#" + container.attr("data-target"));
-                                            if(typeof(destiny.next("input.text").attr("id")) == "undefined"){
-                                               $(this).attr('name','key_accept')
-                                                    .attr('value','Aceptar')
-                                                    .removeClass('ui-keyboard-next')
-                                                    .addClass('ui-keyboard-accept');
-                                            } else {
-                                                destiny = destiny.next("input.text");
-                                                container.attr("data-target", destiny.attr("id"));
-                                                destiny.focus();
-                                            }
+                                            destiny = destiny.next("input.text");
+                                            destiny.focus();
                                         })
-                                    .appendTo(newSet);
+                                        .appendTo(newSet);
                                     break;
                             }
                         } else {
                             keyBtn.clone()
-                                .attr('name','key_'+row+'_'+key)
-                                .val(keys[key])
+                                .text(keys[key])
                                 .click(function(){
-                                    destiny = $("#" + container.attr("data-target"));
-                                    destiny.val(destiny.val() + this.value);
+                                    destiny.val(destiny.val() + $(this).text());
                                     destiny.focus();
                                 })
-                                .appendTo(newSet);
+                            .appendTo(newSet);
                         }
                     }
                 }
             }
         }
-
-    });
 })(jQuery);
