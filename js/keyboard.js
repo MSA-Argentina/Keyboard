@@ -1,9 +1,10 @@
 (function($){
         
-        var destiny = jQuery("input.text:first").attr("id");
-        var container = $("#keyboard");
+        var destiny;
+        var container;
+
         //Keyboard layouts
-        var layouts = {
+        var av_layouts = {
             "qwerty": [
                 ['1 2 3 4 5 6 7 8 9 0'],
                 ['Q W E R T Y U I O P'],
@@ -30,30 +31,31 @@
             this.addClass("text");
             this.focusin(function(){
                 destiny = $(this);
-                container.attr("data-target", destiny.attr("id"));
                 if(typeof(destiny.next("input.text").attr("id")) != "undefined"){
-                    $('div[name="key_accept"]').attr('name','key_next')
+                    $('div.ui-keyboard-accept')
                            .text('Siguiente')
-                           .removeClass('ui-keyboard-accept')
-                           .addClass('ui-keyboard-next');
+                           .addClass('ui-keyboard-next')
+                           .removeClass('ui-keyboard-accept');
                 } else {
-                    $('div[name="key_next"]').attr('name','key_accept')
+                    $('div.ui-keyboard-next')
                            .text('Aceptar')
-                           .removeClass('ui-keyboard-next')
-                           .addClass('ui-keyboard-accept');
+                           .addClass('ui-keyboard-accept')
+                           .removeClass('ui-keyboard-next');
                 }
             });
         };
 
         $.fn.build_keyboard = function(options){
             container = this;
-            container.attr("id","keyboard");
-            if(this.attr("data-target") == undefined){
-                this.attr("data-target", destiny);
-            }
+            destiny = jQuery("input.text:first").attr("id");
 
-            for( row in layouts['qwerty'] ){
-                currentRow = layouts['qwerty'][row];
+            var settings = $.extend({
+            // These are the defaults.
+            layout: "qwerty"
+            }, options );
+
+            for( row in av_layouts[settings.layout] ){
+                currentRow = av_layouts[settings.layout][row];
                 newRow = jQuery('<div></div>')
                     .attr('id','keyboard-row'+row)
                     .addClass('keyboard-row')

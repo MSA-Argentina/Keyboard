@@ -18,7 +18,7 @@
 
 <div id="page-wrap">
 
-	<h1><a href="https://github.com/Mottie/Keyboard">Virtual Keyboard</a></h1>
+	<h1><a href="https://github.com/flomincucci/Keyboard">Virtual Keyboard</a></h1>
 
 	<div class="block">
 		<h2><span class="tooltip" title="Click to see code">QWERTY Text</span></h2>
@@ -26,12 +26,8 @@
 		<input id="text2" class="text" type="text" placeholder="Enter something else">
         <div class="qwerty"></div>
         <script type="text/javascript">
-            $('.qwerty').build_keyboard();
+            $('.qwerty').build_keyboard({layout: 'qwerty'});
             $('.text').keyboard();
-            $('input[name="key_accept"]').on('click',test);
-            function test(){
-                console.log('acepto');
-            }
         </script>
 
 
